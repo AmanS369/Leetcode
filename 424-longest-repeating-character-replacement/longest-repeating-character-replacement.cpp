@@ -26,11 +26,11 @@ public:
             }
             j++;
         }
-        int cnt = maxCnt();
+        // int cnt = maxCnt();
 
-         if( cnt + k >= j-i+1 ){
-               mx = max(mx,j-i);
-            }
+        //  if( cnt + k >= j-i+1 ){
+        //        mx = max(mx,j-i);
+        //     }
         return mx;
     }
 };
