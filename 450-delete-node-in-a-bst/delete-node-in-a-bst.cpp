@@ -1,39 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    
-    TreeNode* findRightmost(TreeNode* root) {
-        while (root->right != nullptr) {
-            root = root->right;
-        }
-        return root;
-    }
+    TreeNode* rightEnd(TreeNode* root){
 
-    
+        while (root->left != nullptr) 
+            root = root->left;
+        return root;
+     }
+
     TreeNode* deleteNode(TreeNode* root, int key) {
-        if (root == nullptr) return nullptr;  
+      if(root==NULL) return NULL;
 
-        if (key < root->val) {
-            root->left = deleteNode(root->left, key); 
-        } else if (key > root->val) {
-            root->right = deleteNode(root->right, key);  
-        } else {
-            // Node to be deleted found
-            if (root->left == nullptr ) {
-                TreeNode* temp = root->right;
-                delete root;
-                return temp;  
-            } else if (root->right == nullptr ) {
-                TreeNode* temp = root->left;
-                delete root;
-                return temp;  
-            } else {
-               
-                TreeNode* rightmost = findRightmost(root->left);
-                root->val = rightmost->val;  
-                root->left = deleteNode(root->left, rightmost->val);  
-            }
+      if( key < root->val){
+        root->left = deleteNode(root->left,key);
+      }else if(key > root->val){
+        root->right = deleteNode(root->right,key);
+      }else{
+        if(root->left==NULL && root->right!=NULL)root = root->right;
+        else if( root->right==NULL && root->left!=NULL) root = root->left;
+        else if( root->right==NULL && root->left==NULL) root =  NULL;
+        else{
+            TreeNode* leftpart = rightEnd(root->right);
+            leftpart->left = root->left;
+            root = root->right;
+
         }
+        
+      }
 
-        return root;
+      return root;
+       
     }
 };
