@@ -23,13 +23,22 @@ void inorder(TreeNode* root) {
 
     inorder(root->right);  
 }
-
+TreeNode* last = NULL;
     bool isValidBST(TreeNode* root) {
-       inorder(root);
-       for(int i=1;i<inorderTraversal.size();i++){
-        if(inorderTraversal[i] <= inorderTraversal[i-1]) return false;
-       }
-       return true;
+    //    inorder(root);
+    //    for(int i=1;i<inorderTraversal.size();i++){
+    //     if(inorderTraversal[i] <= inorderTraversal[i-1]) return false;
+    //    }
+    //    return true;
+
+    if(root==NULL) return true;
+     if(!isValidBST(root->left)) return false; 
+
+     if(last!=NULL && last->val>=root->val) return false;
+     last = root;
+     if(!isValidBST(root->right)) return false; 
+     return true;
+
 
     }
 };
