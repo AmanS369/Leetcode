@@ -2,19 +2,21 @@
 class Solution {
 public:
     vector<vector<int>>ans;
-    void help(TreeNode* root, int targetSum,vector<int>output,int sum){
+    void help(TreeNode* root, int targetSum,vector<int>&output,int sum){
         if(root==NULL) return;
+        output.push_back(root->val);
+        sum+=root->val;
         if(root->left==NULL && root->right==NULL){
-            sum+=root->val;
+            
             if(sum==targetSum){
-                output.push_back(root->val);
+           
                 ans.push_back(output);
             }
         }
-        output.push_back(root->val);
-        sum+=root->val;
+ 
         help(root->left,targetSum,output,sum);
         help(root->right,targetSum,output,sum);
+        output.pop_back();
     }
     vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
        vector<int>output;
