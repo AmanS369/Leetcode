@@ -1,65 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    bool isAllSame(vector<TreeNode*> &deepestNode){
-        TreeNode* curr = deepestNode[0];
-        for(auto node : deepestNode){
-            if(node != curr) return false;
+   
+    pair<int, TreeNode*> solve(TreeNode* root){
+        if(root==NULL) return {0,NULL};
+        if(root->left ==NULL && root->right ==NULL){
+            return {1,root};
         }
-        return true;
+        pair<int, TreeNode*> lLca = solve(root->left);
+        pair<int, TreeNode*> RLca = solve(root->right);
+
+        if(lLca.first > RLca.first){
+           return {lLca.first + 1 , lLca.second};
+        }else if(lLca.first < RLca.first){
+           return {RLca.first + 1 , RLca.second};
+        }
+         return {RLca.first + 1 , root};
+    
     }
-
     TreeNode* lcaDeepestLeaves(TreeNode* root) {
-        if (root == NULL) return NULL;
-
-        unordered_map<TreeNode*, TreeNode*> parentMap;
-        queue<vector<TreeNode*>> q;
-
-        parentMap[root] = NULL;  // FIX: initialize root parent
-
-        vector<TreeNode*> deepestNode;
-        q.push({root});
-
-        // BFS to get deepest level nodes
-        while(!q.empty()){
-            vector<TreeNode*> top = q.front();   // FIX: front(), not top()
-            q.pop();
-
-            vector<TreeNode*> newV;
-
-            int i = 0;
-            while(i < top.size()){
-                if(top[i]->left != NULL){
-                    parentMap[top[i]->left] = top[i];
-                    newV.push_back(top[i]->left);
-                }
-
-                if(top[i]->right != NULL){
-                    parentMap[top[i]->right] = top[i];
-                    newV.push_back(top[i]->right);
-                }
-
-                i++;  // FIX: increment
-            }
-
-            if(!newV.empty()){
-                deepestNode = newV;
-                q.push(newV);
-            }
-        }
-
-        if(deepestNode.size() == 0) return root;
-        if(deepestNode.size() == 1) return deepestNode[0];
-
-        // Move all deepest nodes upward until they meet
-        while(true){
-            for(int i = 0; i < deepestNode.size(); i++){
-                if(deepestNode[i] != NULL)
-                    deepestNode[i] = parentMap[deepestNode[i]];
-            }
-
-            if(isAllSame(deepestNode)) return deepestNode[0];
-        }
-
-        return NULL;
+         pair<int, TreeNode*> ans = solve(root);
+        return ans.second;
     }
 };
