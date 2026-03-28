@@ -21,12 +21,12 @@
  */
 class Solution {
 public:
-    TreeNode* solve(vector<int>data,int i , int j){
+    TreeNode* solve1(vector<int>data,int i , int j){
         if(i > j || i<0) return NULL;
         
         int mid = i + (j - i) / 2;
-        TreeNode* left = solve(data,i,mid-1);
-        TreeNode* right = solve(data,mid+1,j);
+        TreeNode* left = solve1(data,i,mid-1);
+        TreeNode* right = solve1(data,mid+1,j);
         TreeNode* root = new TreeNode(data[mid]);
 
         root->left = left;
@@ -35,12 +35,34 @@ public:
         return root;
         
     }
+    ListNode* curr;
+    TreeNode* solve(int n){
+        if(n<=0) return NULL;
+        TreeNode* left = solve(n / 2);
+        TreeNode* root = new TreeNode(curr->val);
+        curr = curr->next;
+        TreeNode* right  = solve(n - n/2 - 1);
+        root->left = left;
+        root->right = right;
+        return root;
+    }
+
     TreeNode* sortedListToBST(ListNode* head) {
-        vector<int>data;
-        while(head!=NULL){
-            data.push_back(head->val);
-            head = head->next;
+        // vector<int>data;
+        // while(head!=NULL){
+        //     data.push_back(head->val);
+        //     head = head->next;
+        // }
+        // return solve(data,0,data.size()-1);
+         int n = 0;
+        ListNode* temp = head;
+        while (temp) {
+            n++;
+            temp = temp->next;
         }
-        return solve(data,0,data.size()-1);
+
+        curr = head;
+
+        return solve(n);
     }
 };
